@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <title>Form</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <style>
+      .btn {
+        background-color: rgb(19, 34, 53);
+        border: 1px solid rgb(19, 34, 53);
+        color: rgb(3, 191, 178);
+      }
+      .btn:hover {
+        background-color: rgb(3, 191, 178);
+        border: 1px solid rgb(3, 191, 178);
+        columns: rgb(19, 34, 53);
+      }
+    </style>
+  </head>
+  <body class="d-flex h-100 text-center text-bg-light">
+    <div
+      class="container d-flex w-100 h-100 p-3 mx-auto text-start flex-column"
+    >
+      <main class="row my-auto justify-content-center">
+        <form id="form" class="col-sm-10 col-md-8">
+          <div class="form-group">
+            <label for="name" class="my-3">Name:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              placeholder="John Doe"
+              required
+            />
+          </div>
+          <div class="form-group mt-3">
+            <div class="row">
+              <div class="col">
+                <label for="tel">Phone number:</label>
+                <input
+                  id="tel"
+                  type="tel"
+                  class="form-control"
+                  placeholder="0712 345 678"
+                  required
+                />
+              </div>
+              <div class="col">
+                <label for="email">Email:</label>
+                <input
+                  id="email"
+                  type="email"
+                  class="form-control"
+                  placeholder="name@example.com"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="job" class="my-3">Select job/industry:</label>
+            <select multiple class="form-control" id="job" required>
+              <option>Plumber</option>
+              <option>Fundi</option>
+              <option>Sparky</option>
+              <option>Hardware</option>
+              <option>Supplier</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="address" class="my-3">Address:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="address"
+              placeholder="Nairobi, Mombasa"
+            />
+          </div>
+          <div class="text-center mt-5">
+            <button class="btn w-50" value="submit" type="submit">
+              Submit
+            </button>
+          </div>
+        </form>
+      </main>
+    </div>
+    <script>
+      const btn = document.getElementById("btn");
+      const form = document.getElementById("form");
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const name = document.getElementById("name");
+        const tel = document.getElementById("tel");
+        const email = document.getElementById("email");
+        const job = document.getElementById("job");
+        const address = document.getElementById("address");
+
+        console.log("Name: ", name.value);
+        console.log("tel: ", tel.value);
+        console.log("email: ", email.value);
+        console.log("job: ", job.value);
+        console.log("address: ", address.value);
+
+        alert(
+          `Thank you ${name.value} for sharing your data with us. We've successfully received it, and our team will handle the rest. Stay tuned for any updates.`
+        );
+      });
+    </script>
+  </body>
+</html>
