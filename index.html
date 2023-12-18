@@ -28,20 +28,26 @@
           margin-top: -5rem;
         }
       }
+
+      .loading {
+        pointer-events: none;
+        opacity: 0.7;
+      }
     </style>
   </head>
   <body class="d-flex h-100 text-center text-bg-light">
     <div
       class="container d-flex w-100 h-100 p-3 mx-auto text-start flex-column"
     >
-      <main class="row my-auto trim-top justify-content-center">
-        <form id="form" class="col-sm-10 col-md-8">
+      <main class="row my-auto trim-top text-center justify-content-center">
+        <div id="alertMessage" class="alert alert-success d-none"></div>
+        <form id="submit-to-google-sheet" class="col-sm-10 text-start col-md-8">
           <div class="form-group">
             <label for="name" class="my-3">Name:</label>
             <input
               type="text"
               class="form-control"
-              id="name"
+              name="name"
               placeholder="John Doe"
               required
             />
@@ -51,7 +57,7 @@
               <div class="col">
                 <label for="tel">Phone number:</label>
                 <input
-                  id="tel"
+                  name="tel"
                   type="tel"
                   class="form-control"
                   placeholder="0712 345 678"
@@ -61,7 +67,7 @@
               <div class="col">
                 <label for="email">Email:</label>
                 <input
-                  id="email"
+                  name="email"
                   type="email"
                   class="form-control"
                   placeholder="name@example.com"
@@ -73,12 +79,19 @@
 
           <div class="form-group">
             <label for="job" class="my-3">Select job/industry:</label>
-            <select multiple class="form-control" id="job" required>
-              <option>Plumber</option>
-              <option>Fundi</option>
-              <option>Sparky</option>
-              <option>Hardware</option>
-              <option>Supplier</option>
+            <select name="job" class="form-select" id="job" required>
+              <option value="none" selected>Select...</option>
+              <option value="owner">Owner</option>
+              <option value="contractor">Contractor</option>
+              <option value="architect">Architect</option>
+              <option value="civilEngineer">Civil Engineer</option>
+              <option value="quantitySurveyor">Quantity Surveyor</option>
+              <option value="foreman">Foreman</option>
+              <option value="masonTiler">Mason/Tiler</option>
+              <option value="electrician">Electrician</option>
+              <option value="carpenter">Carpenter</option>
+              <option value="roofer">Roofer</option>
+              <option value="painter">Painter</option>
             </select>
           </div>
           <div class="form-group">
@@ -86,12 +99,27 @@
             <input
               type="text"
               class="form-control"
-              id="address"
-              placeholder="Nairobi, Mombasa"
+              name="address"
+              placeholder="Nairobi, Mombasa..."
             />
           </div>
-          <div class="text-center mt-5">
-            <button class="btn w-50" value="submit" type="submit">
+          <div class="text-center mt-3">
+            <div
+              style="color: rgb(19, 34, 53)"
+              id="loadingSpinner"
+              class="spinner-border d-none"
+              role="status"
+            >
+              <span class="sr-only"></span>
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <button
+              class="btn w-50"
+              value="submit"
+              type="submit"
+              id="submitBtn"
+            >
               Submit
             </button>
           </div>
@@ -99,19 +127,42 @@
       </main>
     </div>
     <script>
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbyT-wGRQVZTc_TQG5Pnf4DWLmpli9gwQKmyAPJMuFYq85q7loCQ0suZMWkPx3JbZWrCRg/exec";
+      const alertMessage = document.getElementById("alertMessage");
       const btn = document.getElementById("btn");
-      const form = document.getElementById("form");
-      form.addEventListener("submit", (event) => {
+      const form = document.getElementById("submit-to-google-sheet");
+      const loadingSpinner = document.getElementById("loadingSpinner");
+      const submitBtn = document.getElementById("submitBtn");
+
+      form.addEventListener("submit", async (event) => {
         event.preventDefault();
-        const name = document.getElementById("name");
-        const tel = document.getElementById("tel");
-        const email = document.getElementById("email");
-        const job = document.getElementById("job");
-        const address = document.getElementById("address");
-        alert(
-          `Thank you ${name.value} for sharing your data with us. We've successfully received it, and our team will handle the rest. Stay tuned for any updates.`
-        );
-        form.reset();
+        alertMessage.innerHTML = "";
+
+        loadingSpinner.classList.remove("d-none");
+        submitBtn.classList.add("loading");
+
+        try {
+          const response = await fetch(scriptURL, {
+            method: "POST",
+            body: new FormData(form),
+          });
+
+          if (response.ok) {
+            form.reset();
+            alertMessage.innerHTML = `Thank you ${form.name.value}! We've successfully received your info. Stay tuned for any updates.`;
+          } else {
+            throw new Error("There was an error, try again.");
+          }
+        } catch (error) {
+          alertMessage.innerHTML = "There was an error, try again.";
+        } finally {
+          // Hide loading spinner
+          loadingSpinner.classList.add("d-none");
+          submitBtn.classList.remove("loading");
+        }
+
+        alertMessage.classList.remove("d-none");
       });
     </script>
   </body>
